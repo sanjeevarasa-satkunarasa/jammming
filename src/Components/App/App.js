@@ -2,19 +2,46 @@ import React, {useState} from "react";
 import styles from "..\App\App.module.css";
 
 function App () {
-  const  {searchResults,setSearchResult } = useState([{
-    name: "example track name 1",
-    artist: "example track artist 1", 
-    album: "example track album 1",
+  const  [searchResults,setSearchResults] = useState([{
+    name: "Example Playlist Name 1",
+    artist: "Example Artist Name 1",
+    album: "Example Album Name 1", 
     id: 1
   },
   {
-    name: "example track name 2",
-    artist: "example track artist 2", 
-    album: "example track album 2",
+    name: "Example Playlist Name 2",
+    artist: "Example Artist Name 2",
+    album: "Example Album Name 2", 
     id: 2
-  }]
-)
+  },
+  {
+    name: "Example Playlist Name 3",
+    artist: "Example Artist Name 3",
+    album: "Example Album Name 3", 
+    id: 3
+  }
+  ]);
+  const [playlistName, setPlaylistName] = useState("Example Playlist Name")
+  const [playlistTracks,setPlaylistTracks] = useState([
+    {
+      name: "Example Playlist Name 1",
+      artist: "Example Artist Name 1",
+      album: "Example Album Name 1", 
+      id: 1
+    },
+    {
+      name: "Example Playlist Name 2",
+      artist: "Example Artist Name 2",
+      album: "Example Album Name 2", 
+      id: 2
+    },
+    {
+      name: "Example Playlist Name 3",
+      artist: "Example Artist Name 3",
+      album: "Example Album Name 3", 
+      id: 3
+    }
+  ])
     return (
         <div>
         <h1>
@@ -27,6 +54,7 @@ function App () {
             {/* <!-- Add a SearchResults component --> */}
             <SearchResults userSearchResults={searchResults}/>
             {/* <!-- Add a Playlist component --> */}
+            <Playlist playlistName={playlistName} playlistTracks={playlistTracks}/>
           </div>
         </div>
       </div>
