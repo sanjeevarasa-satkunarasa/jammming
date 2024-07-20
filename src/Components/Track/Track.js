@@ -1,6 +1,18 @@
 import React from "react";
 
 function Track () {
+    function renderAction() {
+        if (props.isRemoval) {
+            return <button className={styles["Track-action"]} onClick={passTrack}>+</button>
+        } else {
+            return <button className={styles["Track-action"]}>-</button>
+        }
+    }
+
+    function passTrack() {
+        props.onAdd(props.track);
+
+    }
     return (
       <div className="Track">
         <div className="Track-information">
@@ -10,6 +22,7 @@ function Track () {
           <p>{props.track.artist} | {props.track.album}</p>
         </div>
         {/* <button class="Track-action"><!-- + or - will go here --></button> */}
+        {renderAction()}
       </div>
     );
 }
