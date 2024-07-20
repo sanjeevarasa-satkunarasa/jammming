@@ -1,7 +1,20 @@
-import React from "react";
-import styles from "src\Components\App\App.module.css";
+import React, {useState} from "react";
+import styles from "..\App\App.module.css";
 
 function App () {
+  const  {searchResults,setSearchResult } = useState([{
+    name: "example track name 1",
+    artist: "example track artist 1", 
+    album: "example track album 1",
+    id: 1
+  },
+  {
+    name: "example track name 2",
+    artist: "example track artist 2", 
+    album: "example track album 2",
+    id: 2
+  }]
+)
     return (
         <div>
         <h1>
@@ -12,6 +25,7 @@ function App () {
           
           <div className={styles["App-playlist"]}>
             {/* <!-- Add a SearchResults component --> */}
+            <SearchResults userSearchResults={searchResults}/>
             {/* <!-- Add a Playlist component --> */}
           </div>
         </div>
