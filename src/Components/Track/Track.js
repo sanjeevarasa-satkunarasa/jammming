@@ -3,15 +3,18 @@ import React from "react";
 function Track () {
     function renderAction() {
         if (props.isRemoval) {
-            return <button className={styles["Track-action"]} onClick={passTrack}>+</button>
+            return <button className={styles["Track-action"]} onClick={passTrackToRemove}>-</button>
         } else {
-            return <button className={styles["Track-action"]}>-</button>
+            return <button className={styles["Track-action"]} onClick={passTrack}>+</button>
         }
     }
 
     function passTrack() {
         props.onAdd(props.track);
+    }
 
+    function passTrackToRemove() {
+        props.onRemove(props.track);''
     }
     return (
       <div className="Track">
