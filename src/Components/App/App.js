@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "..\App\App.module.css";
+import { Spotify } from "../../util/Spotify/Spotify";
 
 function App() {
   const [searchResults, setSearchResults] = useState([{
@@ -66,6 +67,7 @@ function App() {
   }
 
   function search(term) {
+    Spotify.search(term).then((result) => setSearchResults(result))
     console.log(term);
   }
 
