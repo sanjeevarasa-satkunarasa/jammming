@@ -1,44 +1,48 @@
-import React from "react";
-import styles from "./Track.module.css";
+import React, { useCallback } from "react";
 
-function Track(props) {
-  function renderAction() {
+import "./Track.css";
+
+const Track = (props) => {
+  const addTrack = useCallback(
+    (event) => {
+      props.onAdd(props.track);
+    },
+    [props.onAdd, props.track]
+  );
+
+  const removeTrack = useCallback(
+    (event) => {
+      props.onRemove(props.track);
+    },
+    [props.onRemove, props.track]
+  );
+
+  const renderAction = () => {
     if (props.isRemoval) {
       return (
-        <button className={styles["Track-action"]} onClick={passTrackToRemove}>
+        <button className="Track-action" onClick={removeTrack}>
           -
         </button>
       );
-    } else {
-      return (
-        <button className={styles["Track-action"]} onClick={passTrack}>
-          +
-        </button>
-      );
     }
-  }
+    return (
+      <button className="Track-action" onClick={addTrack}>
+        +
+      </button>
+    );
+  };
 
-  function passTrack() {
-    props.onAdd(props.track);
-  }
-
-  function passTrackToRemove() {
-    props.onRemove(props.track);
-  }
   return (
-    <div className={styles.Track}>
-      <div className={styles["Track-information"]}>
-        {/* <h3><!-- track name will go here --></h3> */}
+    <div className="Track">
+      <div className="Track-information">
         <h3>{props.track.name}</h3>
-        {/* <p><!-- track artist will go here--> | <!-- track album will go here --></p> */}
         <p>
           {props.track.artist} | {props.track.album}
         </p>
       </div>
-      {/* <button class="Track-action"><!-- + or - will go here --></button> */}
       {renderAction()}
     </div>
   );
-}
+};
 
 export default Track;

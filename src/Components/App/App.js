@@ -1,106 +1,68 @@
-import React, { useState } from "react";
-import styles from "./App.module.css";
-import SearchResults from "../SearchResults/SearchResults";
+import React, { useState, useCallback } from "react";
+import "./App.css";
+
 import Playlist from "../Playlist/Playlist";
 import SearchBar from "../SearchBar/SearchBar";
-import { Spotify } from "../../util/Spotify/Spotify";
+import SearchResults from "../SearchResults/SearchResults";
+import Spotify from "../../util/Spotify";
 
-function App() {
-  const [searchResults, setSearchResults] = useState([
-    {
-      name: "Example Track Name 1",
-      artist: "Example Track Artist 1",
-      album: "Example Track Album 1",
-      id: 1,
-    },
-    {
-      name: "Example Track Name 2",
-      artist: "Example Track Artist 2",
-      album: "Example Track Album 2",
-      id: 2,
-    },
-  ]);
-  const [playlistName, setPlaylistName] = useState("Example Playlist Name");
-  const [playlistTracks, setPlaylistTracks] = useState([
-    {
-      name: "Example Playlist Name 1",
-      artist: "Example Playlist Artist 1",
-      album: "Example Playlist Album 1",
-      id: 11,
-    },
-    {
-      name: "Example Playlist Name 2",
-      artist: "Example Playlist Artist 2",
-      album: "Example Playlist Album 2",
-      id: 22,
-    },
-    {
-      name: "Example Playlist Name 3",
-      artist: "Example Playlist Artist 3",
-      album: "Example Playlist Album 3",
-      id: 33,
-    },
-  ]);
+const App = () => {
+  const [searchResults, setSearchResults] = useState([]);
+  const [playlistName, setPlaylistName] = useState("New Playlist");
+  const [playlistTracks, setPlaylistTracks] = useState([]);
 
-  function addTrack(track) {
-    const existingTrack = playlistTracks.find((t) => t.id === track.id);
-    const newTrack = playlistTracks.concat(track);
-    if (existingTrack) {
-      console.log("Track already exists");
-    } else {
-      setPlaylistTracks(newTrack);
-    }
-  }
+  const search = useCallback((term) => {
+    Spotify.search(term).then(setSearchResults);
+  }, []);
 
-  function removeTrack(track) {
-    const existingTrack = playlistTracks.filter((t) => t.id !== track.id);
-    setPlaylistTracks(existingTrack);
-  }
+  const addTrack = useCallback(
+    (track) => {
+      if (playlistTracks.some((savedTrack) => savedTrack.id === track.id))
+        return;
 
-  function updatePlaylistName(name) {
+      setPlaylistTracks((prevTracks) => [...prevTracks, track]);
+    },
+    [playlistTracks]
+  );
+
+  const removeTrack = useCallback((track) => {
+    setPlaylistTracks((prevTracks) =>
+      prevTracks.filter((currentTrack) => currentTrack.id !== track.id)
+    );
+  }, []);
+
+  const updatePlaylistName = useCallback((name) => {
     setPlaylistName(name);
-  }
+  }, []);
 
-  function savePlaylist() {
-    const trackURIs = playlistTracks.map((t) => t.uri);
-    Spotify.savePlaylist(playlistName, trackURIs).then(() => {
-      updatePlaylistName("New Playlist");
+  const savePlaylist = useCallback(() => {
+    const trackUris = playlistTracks.map((track) => track.uri);
+    Spotify.savePlaylist(playlistName, trackUris).then(() => {
+      setPlaylistName("New Playlist");
       setPlaylistTracks([]);
     });
-  }
-
-  function search(term) {
-    Spotify.search(term).then((result) => setSearchResults(result));
-    console.log(term);
-  }
+  }, [playlistName, playlistTracks]);
 
   return (
     <div>
       <h1>
-        Ja<span className={styles.highlight}>mmm</span>ing
+        Ja<span className="highlight">mmm</span>ing
       </h1>
-      <div className={styles.App}>
-        {/* <!-- Add a SearchBar component --> */}
+      <div className="App">
         <SearchBar onSearch={search} />
-
-        <div className={styles["App-playlist"]}>
-          {/* <!-- Add a SearchResults component --> */}
-          <SearchResults userSearchResults={searchResults} onAdd={addTrack} />
-          {/* passing searchResults state to the SearchResults component as userSearchResults */}
-
-          {/* <!-- Add a Playlist component --> */}
+        <div className="App-playlist">
+          <SearchResults searchResults={searchResults} onAdd={addTrack} />
           <Playlist
             playlistName={playlistName}
             playlistTracks={playlistTracks}
-            onRemove={removeTrack}
             onNameChange={updatePlaylistName}
+            onRemove={removeTrack}
             onSave={savePlaylist}
           />
-          {/* passing playlistName & playlistTracks states to the Playlist component as userSearchResults */}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default App;
